@@ -98,45 +98,7 @@ export default function App() {
                   <span className="bg-black/5 text-black/60 text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider">💡 기질 분석 데이터 기반</span>
                 </div>
 
-                <p className="text-[10px] text-black/40 font-bold tracking-widest uppercase mt-6 mb-2">
-                  Based on C-BARQ & MCPQ Framework
-                </p>
 
-                {/* MBTI Explanation Box (Professional) */}
-                <div className="mt-2 bg-white p-5 rounded-2xl text-sm shadow-sm border border-black/5 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-1.5 h-full bg-[#A8BBA2]"></div>
-                  <p className="font-extrabold flex items-center gap-1.5 mb-2 text-[var(--color-charcoal)]">
-                    <span className="text-lg">🔬</span> 멍-BTI 기질 분석 시스템
-                  </p>
-                  <p className="text-[11px] text-black/60 leading-relaxed mb-4 break-keep font-medium">
-                    사람의 MBTI처럼 반려견의 성격도 체계적으로 나눌 수 있습니다. 단순 재미가 아닌, 실제 수의학·행동학에서 사용하는 기질 평가 지표를 바탕으로 우리 아이의 핵심 본능 3가지를 분석합니다.
-                  </p>
-                  <div className="bg-[#FAF9F6] p-3 rounded-xl border border-black/5 pb-3">
-                    <ul className="space-y-3 text-black/80 font-bold text-xs">
-                      <li className="flex items-center gap-3">
-                        <span className="w-9 text-center bg-white border border-black/10 rounded shadow-sm py-1 text-[10px]">E/C</span>
-                        <div className="flex flex-col">
-                          <span className="text-[10px] text-black/40 tracking-wider">ENERGY</span>
-                          <span className="text-[11px]">활동 에너지 (활동적 ↔ 차분함)</span>
-                        </div>
-                      </li>
-                      <li className="flex items-center gap-3">
-                        <span className="w-9 text-center bg-white border border-black/10 rounded shadow-sm py-1 text-[10px]">G/P</span>
-                        <div className="flex flex-col">
-                          <span className="text-[10px] text-black/40 tracking-wider">GASTRONOMY</span>
-                          <span className="text-[11px]">식탐 수준 (폭풍흡입 ↔ 까탈입맛)</span>
-                        </div>
-                      </li>
-                      <li className="flex items-center gap-3">
-                        <span className="w-9 text-center bg-white border border-black/10 rounded shadow-sm py-1 text-[10px]">I/A</span>
-                        <div className="flex flex-col">
-                          <span className="text-[10px] text-black/40 tracking-wider">INDEPENDENCE</span>
-                          <span className="text-[11px]">독립성 (독립적 ↔ 불안/껌딱지)</span>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
               </div>
               <div className="pb-8">
                 <button 
