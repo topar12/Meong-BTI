@@ -64,6 +64,7 @@ export default function App() {
           {currentStep === 'intro' && (
             <motion.div key="intro" variants={pageVariants} initial="initial" animate="animate" exit="exit" className="flex-1 flex flex-col p-8">
               <div className="flex-1 flex flex-col justify-center">
+                <img src="/favicon.svg" alt="멍-BTI 로고" className="w-[72px] h-[72px] drop-shadow-sm mb-6 rounded-2xl" />
                 <span className="text-sm tracking-widest uppercase mb-4 text-[var(--color-sage)] font-bold">PETFOOD JUO</span>
                 <h1 className="leading-tight mb-6 flex flex-col gap-1">
                   <span className="text-xl font-extrabold text-[#E6AD84] tracking-wide">우리 아이의 진짜 속마음</span>
