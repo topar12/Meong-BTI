@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { resultsData } from '../data/questions';
 import * as htmlToImage from 'html-to-image';
-import { InstagramLogo, CheckCircle, Copy, ArrowCounterClockwise, Sparkle, MagicWand, DownloadSimple, ArrowRight, Camera, Users, ShareNetwork } from '@phosphor-icons/react';
+import { InstagramLogo, CheckCircle, Copy, ArrowCounterClockwise, Sparkle, MagicWand, DownloadSimple, ArrowRight, Camera, Users, ShareNetwork, CaretDown } from '@phosphor-icons/react';
 import { incrementResultCount, getResultStats, logEvent } from '../firebase';
 
 // resultId → Firestore typeCode 매핑
@@ -18,6 +18,7 @@ export function ResultScreen({ resultId, onRestart }: { resultId: string, onRest
   const [customPhoto, setCustomPhoto] = useState<string | null>(null);
   const [statPercent, setStatPercent] = useState<number | null>(null);
   const [statTotal, setStatTotal] = useState<number | null>(null);
+  const [showExplanation, setShowExplanation] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -125,40 +126,70 @@ export function ResultScreen({ resultId, onRestart }: { resultId: string, onRest
     >
       <div className="flex-1 flex flex-col p-5 sm:p-6 w-full max-w-md mx-auto min-h-[90vh] pb-12 pt-8">
         
-        {/* MBTI Explanation Box (Dark Mode Adapt) */}
-        <div className="mb-8 bg-[#242220] p-6 rounded-[1.5rem] text-sm shadow-xl border border-white/10 relative overflow-hidden flex flex-col">
-          <div className="absolute top-0 left-0 w-1.5 h-full bg-[#A8BBA2]"></div>
-          <p className="font-extrabold flex items-center gap-2 mb-2 text-white/90">
-            <span className="text-lg">🔬</span> 멍-BTI 기질 분석 시스템
-          </p>
-          <p className="text-[12px] text-white/50 leading-relaxed mb-6 break-keep font-medium">
-            실제 행동학 기질 평가 지표(C-BARQ, MCPQ)를 바탕으로 우리 아이의 핵심 본능 3가지를 분석했습니다.
-          </p>
-          <div className="bg-white/5 p-4 rounded-xl border border-white/5">
-            <ul className="space-y-4 text-white/80 font-bold text-xs">
-              <li className="flex items-center gap-3">
-                <span className="w-10 text-center bg-black/40 border border-white/10 rounded-md py-1.5 text-[10px] text-white/90">E/C</span>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-[10px] text-white/40 tracking-wider">ENERGY</span>
-                  <span className="text-[11px] text-white/80">활동 에너지 (활동적 ↔ 차분함)</span>
+        {/* MBTI Explanation Toggle */}
+        <div className="mb-6 w-full">
+          <button 
+            onClick={() => setShowExplanation(!showExplanation)}
+            className="w-full bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl p-4 flex items-center justify-between transition-all active:scale-[0.98]"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[#A8BBA2]/20 flex items-center justify-center">
+                <span className="text-[18px]">🔬</span>
+              </div>
+              <div className="flex flex-col items-start gap-0.5">
+                <span className="font-bold text-white/90 text-[13px] sm:text-[14px]">멍-BTI 기질 분석 시스템 안내</span>
+                <span className="text-[11px] text-[#A8BBA2] font-medium tracking-wide">C-BARQ, MCPQ Framework</span>
+              </div>
+            </div>
+            <div className={`w-7 h-7 rounded-full bg-white/5 flex items-center justify-center transition-transform duration-300 ${showExplanation ? 'rotate-180' : ''}`}>
+              <CaretDown weight="bold" size={14} className="text-white/70" />
+            </div>
+          </button>
+          
+          <AnimatePresence>
+            {showExplanation && (
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="pt-3 pb-2 w-full">
+                  <div className="bg-[#242220] p-5 rounded-[1.25rem] text-sm shadow-inner border border-white/5 relative">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-[#A8BBA2] rounded-l-[1.25rem]"></div>
+                    <p className="text-[12px] text-white/60 leading-relaxed mb-4 break-keep font-medium pl-1">
+                      실제 수의학·행동학에서 사용하는 기질 평가 지표를 바탕으로 우리 아이의 핵심 본능 3가지를 분석합니다.
+                    </p>
+                    <div className="bg-black/30 p-4 rounded-xl border border-white/5 ml-1">
+                      <ul className="space-y-3.5 text-white/80 font-bold text-xs">
+                        <li className="flex items-center gap-3.5">
+                          <span className="w-10 text-center bg-white/5 border border-white/10 rounded-lg py-1.5 text-[10px] text-white/90 shadow-sm">E/C</span>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[10px] text-white/50 tracking-wider">ENERGY</span>
+                            <span className="text-[11px] text-white/80">활동 에너지 (활동적 ↔ 차분함)</span>
+                          </div>
+                        </li>
+                        <li className="flex items-center gap-3.5">
+                          <span className="w-10 text-center bg-white/5 border border-white/10 rounded-lg py-1.5 text-[10px] text-white/90 shadow-sm">G/P</span>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[10px] text-white/50 tracking-wider">GASTRONOMY</span>
+                            <span className="text-[11px] text-white/80">식탐 수준 (폭풍흡입 ↔ 까탈입맛)</span>
+                          </div>
+                        </li>
+                        <li className="flex items-center gap-3.5">
+                          <span className="w-10 text-center bg-white/5 border border-white/10 rounded-lg py-1.5 text-[10px] text-white/90 shadow-sm">I/A</span>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[10px] text-white/50 tracking-wider">INDEPENDENCE</span>
+                            <span className="text-[11px] text-white/80">독립성 (독립적 ↔ 불안/껌딱지)</span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="w-10 text-center bg-black/40 border border-white/10 rounded-md py-1.5 text-[10px] text-white/90">G/P</span>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-[10px] text-white/40 tracking-wider">GASTRONOMY</span>
-                  <span className="text-[11px] text-white/80">식탐 수준 (폭풍흡입 ↔ 까탈입맛)</span>
-                </div>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="w-10 text-center bg-black/40 border border-white/10 rounded-md py-1.5 text-[10px] text-white/90">I/A</span>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-[10px] text-white/40 tracking-wider">INDEPENDENCE</span>
-                  <span className="text-[11px] text-white/80">독립성 (독립적 ↔ 불안/껌딱지)</span>
-                </div>
-              </li>
-            </ul>
-          </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* BLOCK 1: Capture-able Result Card */}
