@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import { QuizScreen } from './components/Quiz';
 import { LoadingScreen } from './components/Loading';
@@ -13,6 +13,21 @@ export default function App() {
   const [currentStep, setCurrentStep] = useState<Step>('intro');
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [finalResult, setFinalResult] = useState<string>('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const r = params.get('r');
+    const utmSource = params.get('utm_source');
+    
+    // Validate if the result id is valid
+    if (r && ['result1', 'result2', 'result3', 'result4', 'result5', 'result6', 'result7', 'result8'].includes(r)) {
+      if (utmSource === 'share_link') {
+        logEvent('shared_link_visit', { shared_result_type: r });
+      }
+      setFinalResult(r);
+      setCurrentStep('result');
+    }
+  }, []);
 
   const handleAnswer = (questionId: string, answerId: string) => {
     const newAnswers = { ...answers, [questionId]: answerId };
@@ -34,6 +49,10 @@ export default function App() {
   const handleRestart = () => {
     setAnswers({});
     setCurrentStep('intro');
+    // URL에서 결과 파라미터 제거
+    if (window.history.replaceState) {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
   };
 
   // Variants for fast screen transitions

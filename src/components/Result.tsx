@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { resultsData } from '../data/questions';
 import * as htmlToImage from 'html-to-image';
-import { InstagramLogo, CheckCircle, Copy, ArrowCounterClockwise, Sparkle, MagicWand, DownloadSimple, ArrowRight, Camera, Users } from '@phosphor-icons/react';
+import { InstagramLogo, CheckCircle, Copy, ArrowCounterClockwise, Sparkle, MagicWand, DownloadSimple, ArrowRight, Camera, Users, ShareNetwork } from '@phosphor-icons/react';
 import { incrementResultCount, getResultStats, logEvent } from '../firebase';
 
 // resultId → Firestore typeCode 매핑
@@ -87,6 +87,32 @@ export function ResultScreen({ resultId, onRestart }: { resultId: string, onRest
       alert('이미지 저장에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsDownloading(false);
+    }
+  };
+
+  const handleShare = async () => {
+    const targetUrl = `${window.location.origin}?r=${resultId}&utm_source=share_link&utm_medium=social&utm_campaign=meong_bti_share`;
+    const shareData = {
+      title: '멍-BTI 성향 테스트',
+      text: `🐶 우리 아이는 [${data.type}] ${data.title} 유형이에요!\n너네 댕댕이의 기질에 맞는 맞춤 간식도 추천받아보세요! 👇`,
+      url: targetUrl, 
+    };
+    
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        logEvent('share_result', { result_type: typeCode });
+      } catch (err) {
+        console.log('Share canceled', err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(targetUrl);
+        alert('테스트참여 링크가 복사되었습니다!');
+        logEvent('copy_link', { result_type: typeCode });
+      } catch (err) {
+        alert('링크 복사에 실패했습니다.');
+      }
     }
   };
 
@@ -183,15 +209,35 @@ export function ResultScreen({ resultId, onRestart }: { resultId: string, onRest
           <span>사진을 탭하면 내 강아지 사진으로 교체할 수 있어요</span>
         </div>
 
-        {/* BLOCK 2: Download */}
-        <button 
-          onClick={handleDownload}
-          disabled={isDownloading}
-          className="bg-white/5 hover:bg-white/10 text-white font-semibold py-4 px-6 rounded-[1.25rem] flex items-center justify-center gap-2.5 transition-all duration-300 w-full active:scale-95 disabled:opacity-50 border border-white/10 mb-8 backdrop-blur-md"
-        >
-          <DownloadSimple weight="bold" size={20} className={isDownloading ? 'animate-bounce' : ''} style={{ color: data.bgColor }} />
-          <span className="tracking-[0.05em] text-[15px]">{isDownloading ? '고화질 렌더링 중...' : '결과 이미지 📸 저장하기'}</span>
-        </button>
+        {/* BLOCK 2: Download & Share & Restart */}
+        <div className="flex flex-col gap-3 w-full mb-8">
+          <div className="flex gap-3 w-full">
+            <button 
+              onClick={handleDownload}
+              disabled={isDownloading}
+              className="flex-1 bg-white/5 hover:bg-white/10 text-white font-semibold py-4 px-2 rounded-[1.25rem] flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 disabled:opacity-50 border border-white/10 backdrop-blur-md"
+            >
+              <DownloadSimple weight="bold" size={18} className={isDownloading ? 'animate-bounce' : ''} style={{ color: data.bgColor }} />
+              <span className="tracking-[0.05em] text-[13px] sm:text-[14px]">{isDownloading ? '저장중...' : '이미지 저장'}</span>
+            </button>
+            
+            <button 
+              onClick={handleShare}
+              className="flex-1 bg-white/5 hover:bg-white/10 text-white font-semibold py-4 px-2 rounded-[1.25rem] flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 border border-white/10 backdrop-blur-md"
+            >
+              <ShareNetwork weight="bold" size={18} style={{ color: data.bgColor }} />
+              <span className="tracking-[0.05em] text-[13px] sm:text-[14px]">테스트 공유</span>
+            </button>
+          </div>
+
+          <button 
+            onClick={onRestart}
+            className="w-full bg-transparent hover:bg-white/5 text-white/90 font-bold py-4 px-4 rounded-[1.25rem] flex items-center justify-center gap-2 transition-all duration-300 active:scale-95 border border-white/20 border-dashed"
+          >
+            <ArrowCounterClockwise weight="bold" size={16} className="opacity-80" />
+            <span className="tracking-widest text-[13.5px] sm:text-[14px]">다시하기</span>
+          </button>
+        </div>
 
         {/* BLOCK 3: Custom Solution */}
         <div className="bg-[#242220] p-7 rounded-[1.5rem] text-white relative shadow-2xl w-full mb-8 border border-white/10 overflow-hidden">
@@ -313,15 +359,6 @@ export function ResultScreen({ resultId, onRestart }: { resultId: string, onRest
           </button>
         </div>
 
-        {/* BLOCK 6: Restart */}
-        <div className="flex justify-center pb-6">
-          <button 
-            onClick={onRestart}
-            className="text-white/30 hover:text-white/80 text-[11px] sm:text-[12px] font-bold transition-colors tracking-[0.1em] uppercase flex items-center gap-2"
-          >
-            <ArrowCounterClockwise weight="bold" size={14} /> 다시하기
-          </button>
-        </div>
       </div>
     </motion.div>
   );
