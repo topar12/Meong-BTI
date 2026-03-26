@@ -57,8 +57,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-offwhite)] text-[var(--color-charcoal)] flex flex-col items-center">
-      <div className="w-full max-w-md min-h-screen flex flex-col relative overflow-hidden shadow-sm bg-[var(--color-offwhite)]">
+    <div className="min-h-[100dvh] bg-gray-100 text-[var(--color-charcoal)] flex flex-col items-center">
+      <div className="w-full max-w-[400px] min-h-[100dvh] bg-[var(--color-offwhite)] shadow-2xl relative flex flex-col overflow-hidden sm:min-h-screen">
         
         <AnimatePresence mode="wait">
           {currentStep === 'intro' && (
