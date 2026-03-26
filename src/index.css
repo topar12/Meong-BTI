@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sage: #8A9A86;
+  --color-rose: #D49A89;
+  --color-charcoal: #1A202C;
+  --color-offwhite: #F9F8F6;
+  --color-butter: #E8D18C;
+  
+  --font-display: "Pretendard", sans-serif;
+  --font-body: "Pretendard", sans-serif;
+}
+
+@layer base {
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+  body {
+    background-color: var(--color-offwhite);
+    color: var(--color-charcoal);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+}
+
+/* Custom Ticket Edge Effect for Result Screen */
+.ticket-edge {
+  mask-image: radial-gradient(circle at 10px 10px, transparent 10px, black 11px);
+  mask-size: 100% 20px;
+  mask-repeat: repeat-x;
+  mask-position: 0 100%;
+}
