@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import { QuizScreen } from './components/Quiz';
 import { LoadingScreen } from './components/Loading';
 import { ResultScreen } from './components/Result';
@@ -37,10 +37,10 @@ export default function App() {
   };
 
   // Variants for fast screen transitions
-  const pageVariants = {
+  const pageVariants: Variants = {
     initial: { opacity: 0, y: 10 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: [0.25, 1, 0.5, 1] } },
-    exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: [0.5, 0, 0.75, 0] } }
+    animate: { opacity: 1, y: 0, transition: { duration: 0.25, ease: 'easeOut' } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: 'easeIn' } }
   };
 
   const getProgress = () => {

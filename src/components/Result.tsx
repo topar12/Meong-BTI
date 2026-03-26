@@ -94,7 +94,7 @@ export function ResultScreen({ resultId, onRestart }: { resultId: string, onRest
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
       className="flex-1 flex flex-col w-full h-full bg-[#1C1B1A] text-white overflow-y-auto selection:bg-[#FDFCF8]/20"
     >
       <div className="flex-1 flex flex-col p-5 sm:p-6 w-full max-w-md mx-auto min-h-[90vh] pb-12 pt-8">
